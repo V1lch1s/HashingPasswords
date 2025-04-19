@@ -4,7 +4,7 @@ import { config } from '../utils/config.js';
 const mi_Secretito = config.auth.mi_Secretito;
 
 //console.log('Mi secretito', mi_Secretito);
-const token = (userDoc, userData) => {
+const generateToken = (userDoc, userData) => {
     return jwt.sign(
         {
         id: userDoc.id,
@@ -18,4 +18,4 @@ const token = (userDoc, userData) => {
 // Si ya expiró, generar uno nuevo
 // y enviar al front y a la DB
 
-export default token;
+export default generateToken;

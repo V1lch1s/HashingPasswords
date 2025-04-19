@@ -1,6 +1,8 @@
 import db from "../utils/firebase.js";
 import { cryptPass, verifyPasswd } from "../utils/hashing.js";
-import token from "../utils/generateToken.js";
+import generateToken from "../utils/generateToken.js";
+import verifyToken from '../utils/verifyToken.js';
+import next from 'jsonwebtoken';
 // Verifico si existe la colección y el id de usuario
 /*console.log("Documento con ID:", 'ejemplo1');
 const docSnap = await db.collection('users').doc('ejemplo1').get();
@@ -58,10 +60,26 @@ export const login = async (req, res) => {
     }
     
     // 4. Genera el token jwt
-    // verifyToken ? res.status(200).json({}) : generateToken && Notificar
-    console.log('Campo de autorización del Header:', req.headers['Authorization']);
-    console.log('Token JWT:', token(userDoc, userData));
+    //console.log('userDoc:', userDoc.id);
+    verifyToken(userDoc, userData, next);
+    // ########  Intentar:
+    // El verifyToken no toma las credenciales del usuario porque el req no lo contiene.
+    // El username y el id se puedan utilizar en el generateToken.
+    // Verificar que el método que tengo de verifyToken incluya el token en headers
+    // Que el token se imprima en en la consola del navegador web
+    // La solicitud completa debe ser: 
+    /* Headers { "content-length" → "28", "content-type" → "application/json; charset=utf-8",
+      "token" → "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkiLC
+      JuYW1lIjoiRnJ1bWVuIE9saXZhcyIsImlhdCI6NTExMjY5MDIyLCJleHAiOjM
+      2NjcwOTExMjB9.D1cZxxEE4tjeT9PXgS3dMlCLj17XoG8eO5k4dcf2w9g"}
+    */
 
+
+    console.log(res.headers.get('token')); // Debería estar actualizado
+    // verifyToken ? res.status(200).json({}) : generateToken && Notificar
+    //console.log('Campo de autorización del Header:', req.headers['Authorization']);
+    //console.log('Token JWT:', generateToken(userDoc, userData));
+    
     // 5. Respuesta con el token y datos públicos del usuario
     res.status(200).json({
       isLogin: true,
@@ -78,11 +96,16 @@ export const login = async (req, res) => {
     });
 
   } catch (error) {
+    if (error instanceof TypeError) {
+      res.status(401).json({
+          message: 'Falta el Token'
+      });
+    }
     console.error("Error de Login:", error);
-    res.status(500).json({
+    /*res.status(500).json({
       isLogin: false,
       error: "Error interno del servidor"
-    });
+    });*/
   }
 };
 

@@ -34,10 +34,12 @@ export const AuthProvider = ({ children }) => {
                     // y password.
             });
             
-            console.log(send);
+            //console.log(send);
             // Aparece en la consola del navegador
 
-            if (!send.ok) {
+            if (send.status === 401) {
+                console.log(send.headers);
+            } else {
                 throw new Error(`¡error HTTP! status: ${send.status}`);
             }
 
@@ -50,7 +52,7 @@ export const AuthProvider = ({ children }) => {
                     passwd,
                     token: data.token // Se guarda el token de la API
                 };
-                console.log("Token:" + data.token);
+                //console.log("Token:" + data.token);
                 setUser(userData);
                 localStorage.setItem("user", JSON.stringify(userData));
                 

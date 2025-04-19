@@ -11,10 +11,10 @@ import {
 const router = Router();
 
 // Rutas que deben ser protegidas por interacción con la Base de Datos
-router.get("/items/", getItems);
-router.get("/items/:id", getItem);
-router.post("/items/", postItem);
-router.put("/items/:id", putItem);
-router.delete("/items/:id", deleteItem);
+router.get("/items/", verifyToken, getItems);
+router.get("/items/:id", verifyToken, getItem);
+router.post("/items/", verifyToken, postItem);
+router.put("/items/:id", verifyToken, putItem);
+router.delete("/items/:id", verifyToken, deleteItem);
 
 export default router;
