@@ -9,6 +9,7 @@ import {
 
 const router = Router();
 
+// Rutas que deben ser protegidas por interacción con la Base de Datos
 router.get("/items2/", getItems);
 router.get("/items2/:id", getItem);
 router.post("/items2/", postItem);

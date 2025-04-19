@@ -8,7 +8,7 @@ const RutaProtegida = ({ children }) => {
     // Revisa si hay un usuario almacenado
 
     // No está autenticado, redirige al login
-    if (!estaAutenticado  && !storedUser) {
+    if (!estaAutenticado  && !storedUser /*&& !autorizedToken*/) {
         return <Navigate to="/LoginComponent" replace />;
     }
 

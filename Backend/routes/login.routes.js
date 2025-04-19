@@ -3,6 +3,7 @@ import { login, signUp } from "../controllers/login.controllers.js";
 
 const router = Router();
 
+// Rutas expuestas al cliente
 router.post("/login/", login);
 router.post("/signUp/", signUp);
 

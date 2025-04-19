@@ -1,6 +1,6 @@
 import db from "../utils/firebase.js";
 import { cryptPass, verifyPasswd } from "../utils/hashing.js";
-
+import token from "../utils/generateToken.js";
 // Verifico si existe la colección y el id de usuario
 /*console.log("Documento con ID:", 'ejemplo1');
 const docSnap = await db.collection('users').doc('ejemplo1').get();
@@ -16,7 +16,7 @@ export const login = async (req, res) => {
     const { username, password } = req.body;
     // Datos ingresados por el usuario
 
-    console.log(req.body);
+    //console.log(req.body);
 
     if (!username || !password) {
       return res.status(400).json({
@@ -49,22 +49,34 @@ export const login = async (req, res) => {
     // 3. Verificar la contraseña
     const passwdIngresada = verifyPasswd(password, userData.salt);
     const isLogin = userData.contrasenia === passwdIngresada;
-    
-    if (isLogin) {
-      res.status(200).json({
-        isLogin: true,
-        user: {
-          id: userDoc.id,
-          ...userData // Copia todas las propiedades
-                      // de userData aquí en user
-        }
-      });
-    } else {
-      res.status(400).json({
+
+    if (!isLogin) {
+      return res.status(400).json({
         isLogin: false,
-        error: "Credenciales inváidas"
+        error: "Credenciales inválidas"
       });
     }
+    
+    // 4. Genera el token jwt
+    // verifyToken ? res.status(200).json({}) : generateToken && Notificar
+    console.log('Campo de autorización del Header:', req.headers['Authorization']);
+    console.log('Token JWT:', token(userDoc, userData));
+
+    // 5. Respuesta con el token y datos públicos del usuario
+    res.status(200).json({
+      isLogin: true,
+      token, // Barer Token
+      user: {
+        id: userDoc.id,
+        usuario: userData.usuario,
+        token: userData.token // Token del usuario
+        //email: userData.email
+        //rol: userData.rol
+        //...userData // Copia todas las propiedades
+                      // de userData aquí en user
+      }
+    });
+
   } catch (error) {
     console.error("Error de Login:", error);
     res.status(500).json({
@@ -110,19 +122,20 @@ export const signUp = async (req, res) => {
 
     // 3. Crear el documento de Firestore
     const newUserRef = db.collection('users').doc();
+    
     // Nueva referencia con id autogenerado
-
     await newUserRef.set({
       id: newUserRef.id, // id generado
       usuario: username,
       contrasenia: hash,
-      salt: salt // Y todos los demás 
-                 // datos que debe tener el usuario
+      salt: salt,
+      //token: token // Y todos los demás 
+                   // datos que debe tener el usuario
     });
 
     // 4. Respuesta Exitosa
     res.status(201).json({
-      success: true,
+      success: true, // Registro válido
       user: {
         id: newUserRef.id,
         usuario: username

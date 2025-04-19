@@ -12,5 +12,8 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 export const config = {
     auth: {
         pepper: process.env.PEPPER,
+        mi_Secretito: process.env.SECRETO_JWT
     }
 };
+
+// export default config;

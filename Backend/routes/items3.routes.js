@@ -1,4 +1,5 @@
 import { Router } from "express";
+import verifyToken from '../utils/verifyToken.js';
 import {
   getItems,
   getItem,
@@ -9,10 +10,17 @@ import {
 
 const router = Router();
 
-router.get("/items3/", getItems);
-router.get("/items3/:id", getItem);
-router.post("/items3/", postItem);
-router.put("/items3/:id", putItem);
-router.delete("/items3/:id", deleteItem);
+// Rutas que deben ser protegidas por interacción con la Base de Datos
+router.get("/items3/", verifyToken, getItems);
+router.get("/items3/:id", verifyToken, getItem);
+router.post("/items3/", verifyToken, postItem);
+router.put("/items3/:id", verifyToken, putItem);
+router.delete("/items3/:id", verifyToken, deleteItem);
 
+// Mandar a llamar verifyToken
+/*
+app.get('/api/protected', verifyToken, (req, res) => {
+  // Lógica
+});
+*/
 export default router;
