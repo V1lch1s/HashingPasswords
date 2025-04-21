@@ -1,6 +1,6 @@
 import db from "../utils/firebase.js";
 import { cryptPass, verifyPasswd } from "../utils/hashing.js";
-import generateToken from "../utils/generateToken.js";
+//import generateToken from "../utils/generateToken.js";
 import verifyToken from '../utils/verifyToken.js';
 import next from 'jsonwebtoken';
 // Verifico si existe la colección y el id de usuario
@@ -61,7 +61,7 @@ export const login = async (req, res) => {
     
     // 4. Genera el token jwt
     //console.log('userDoc:', userDoc.id);
-    verifyToken(userDoc, userData, next);
+    verifyToken(req, res, userDoc, userData, next);
     // ########  Intentar:
     // El verifyToken no toma las credenciales del usuario porque el req no lo contiene.
     // El username y el id se puedan utilizar en el generateToken.

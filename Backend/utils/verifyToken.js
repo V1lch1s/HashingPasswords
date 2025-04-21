@@ -7,7 +7,7 @@ import generateToken from '../utils/generateToken.js';
 //                   |     __ Objeto de respuesto
 //                   |    |                         __ La función de Express que permite continuar
 //                   v    v                        v   con el siguiente middleware o controlador
-const verifyToken = (req, res, userDoc, userData, next, ) => {
+const verifyToken = (req, res, userDoc, userData, next ) => {
     console.log('userDoc.id:', userDoc.id);
     try {
         // Extraigo el token del encabezado de Autorización
@@ -25,7 +25,7 @@ const verifyToken = (req, res, userDoc, userData, next, ) => {
         
         console.log('Token2verify:', token);
 
-        /*if (!token) 
+        /*if (!token)
             return res.status(401).json({
                 message: 'Falta el Token'
             });*/
@@ -44,7 +44,7 @@ const verifyToken = (req, res, userDoc, userData, next, ) => {
 
         // instanceof determina si err es una instancia de TypeError
         if (err instanceof TypeError) {
-            const token = generateToken(req.userDoc, req.userData);
+            const token = generateToken(userDoc, userData);
             res.setHeader('token', JSON.stringify(token)); // Modificamos el res por valor
             //console.log(res.headers.get('token'));
             // json es de express y JSON es de la interfaz de js
